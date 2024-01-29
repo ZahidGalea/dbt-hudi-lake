@@ -16,6 +16,7 @@ openai-api-key.txt
 .idea/workspace.xml
 apps/products/chatbot-web/frontend/.idea/
 apps/products/chatbot-web/frontend/.idea/*
+.idea
 # git rm -r --cached apps/products/chatbot-web/frontend/.idea
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,windows,macos,git

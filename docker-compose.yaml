@@ -1,16 +1,24 @@
 version: '3'
 services:
   dbt_spark:
-    build: ./Dockerfiles/delta-dbt.Dockerfile
+    build:
+      context: ./dbt
+      dockerfile: Dockerfile
     volumes:
-      - ./data:/dbt
+      - ./data:/data
 
   twitter_extractor:
-    build: ./Dockerfiles/delta-dbt.Dockerfile
+    build:
+      context: ./extractors/twitter
+      dockerfile: Dockerfile
     volumes:
-      - ./data:/app
+      - ./data:/data
 
   elementary:
-    build: ./Dockerfiles/elementary.Dockerfile
+    build:
+      context: ./elementary
+      dockerfile: Dockerfile
+    command: report
     volumes:
-      - ./data:/elementary
+      - ./dbt:/usr/app
+      - ./dbt/.dbt/:/root/.dbt/

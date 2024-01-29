@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get install -y default-jdk scala
 
 # Instala DBT
-RUN pip install dbt-spark[PyHive]
+RUN pip install dbt-spark[session]
 
 # Configura las variables de entorno para Java y Spark
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64

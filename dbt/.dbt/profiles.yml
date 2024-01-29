@@ -1,0 +1,20 @@
+local:
+  target: dev
+  outputs:
+    dev:
+      type: spark
+      method: session
+      schema: twitter
+      host: NA # not used, but required by `dbt-core`
+      server_side_parameters:
+        "spark.driver.memory": "4g" 
+elementary:
+  target: dev
+  outputs:
+    dev:
+      type: spark
+      method: session
+      schema: twitter
+      host: NA # not used, but required by `dbt-core`
+      server_side_parameters:
+        "spark.driver.memory": "4g" 

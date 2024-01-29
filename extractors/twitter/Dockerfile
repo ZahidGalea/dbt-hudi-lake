@@ -5,7 +5,7 @@ FROM python:3.10-slim
 RUN pip install tweepy pandas
 
 # Copia tus scripts de Python aquí
-COPY ./scripts/twitter_extractor.py /app/
+COPY ./twitter_extractor.py /app/
 
 WORKDIR /app
 

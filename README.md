@@ -6,5 +6,5 @@
 1. Clone this repo.
 2. Build the images.
 ´´´
-docker-compose build
+docker-compose build --no-cache
 ´´´

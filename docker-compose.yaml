@@ -7,7 +7,7 @@ services:
     volumes:
       - ./data:/data
 
-  binance_scrapping:
+  binance-scrapper:
     build:
       context: extractors/binance
       dockerfile: Dockerfile
@@ -16,22 +16,24 @@ services:
 
   elementary:
     build:
-      context: ./elementary
+      context: dbt/elementary
       dockerfile: Dockerfile
     command: report
     volumes:
       - ./dbt:/usr/app
       - ./dbt/.dbt/:/root/.dbt/
   
-  selenium-docker:
-    image: seleniarm/standalone-chromium:latest
-    container_name: selenium-docker
-    platform: linux/amd64
+  spark3-thrift:
+    build: thrift/
     ports:
-      - "4444:4444"
-      - "5900:5900"
-      - "7900:7900"
+      - "10000:10000"
+      - "4040:4040"
+    command: >
+      --packages org.apache.hudi:hudi-spark3.3.x_2.12:1.0.0-beta1
+      --conf 'spark.serializer=org.apache.spark.serializer.KryoSerializer'
+      --conf 'spark.sql.hive.convertMetastoreParquet=false'
+      --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2
+      --name "Thrift JDBC/ODBC Server"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./selenium/config.toml:/opt/bin/config.toml
-      - ./selenium/assets:/opt/selenium/assets
+      - ./data/:/spark-warehouse/
+      - ./thrift/spark-defaults.conf:/usr/spark/conf/spark-defaults.conf

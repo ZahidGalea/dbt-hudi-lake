@@ -7,9 +7,9 @@ services:
     volumes:
       - ./data:/data
 
-  twitter_extractor:
+  binance_scrapping:
     build:
-      context: ./extractors/twitter
+      context: extractors/binance
       dockerfile: Dockerfile
     volumes:
       - ./data:/data
@@ -22,3 +22,16 @@ services:
     volumes:
       - ./dbt:/usr/app
       - ./dbt/.dbt/:/root/.dbt/
+  
+  selenium-docker:
+    image: seleniarm/standalone-chromium:latest
+    container_name: selenium-docker
+    platform: linux/amd64
+    ports:
+      - "4444:4444"
+      - "5900:5900"
+      - "7900:7900"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./selenium/config.toml:/opt/bin/config.toml
+      - ./selenium/assets:/opt/selenium/assets

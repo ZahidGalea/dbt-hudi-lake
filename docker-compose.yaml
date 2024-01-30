@@ -28,12 +28,26 @@ services:
     ports:
       - "10000:10000"
       - "4040:4040"
+    depends_on:
+      - hive-metastore
     command: >
-      --packages org.apache.hudi:hudi-spark3.3.x_2.12:1.0.0-beta1
-      --conf 'spark.serializer=org.apache.spark.serializer.KryoSerializer'
-      --conf 'spark.sql.hive.convertMetastoreParquet=false'
       --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2
-      --name "Thrift JDBC/ODBC Server"
+      --name Thrift JDBC/ODBC Server
     volumes:
       - ./data/:/spark-warehouse/
+      - ./thrift/hive-site.xml:/usr/spark/conf/hive-site.xml
       - ./thrift/spark-defaults.conf:/usr/spark/conf/spark-defaults.conf
+    environment:
+      - WAIT_FOR=hive-metastore:5432
+        
+        
+  hive-metastore:
+    image: postgres:9-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.hive-metastore/:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=usuario
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=metastore

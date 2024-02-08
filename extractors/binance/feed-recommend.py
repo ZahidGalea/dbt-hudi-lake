@@ -5,9 +5,9 @@ from datetime import datetime
 import requests
 
 from extractors.binance.default_config import (
-	DATA_LANDING_FOLDER,
-	DEFAULT_HEADER,
-	DEFAULT_URL,
+    DATA_LANDING_FOLDER,
+    DEFAULT_HEADER,
+    DEFAULT_URL,
 )
 
 
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     arg_parse.add_argument("--landing-path", type=str, default=DATA_LANDING_FOLDER)
     args = arg_parse.parse_args()
 
-    data = {"pageIndex": 2, "pageSize": 50, "scene": "web-homepage"}
+    data = {"pageIndex": 1, "pageSize": 50, "scene": "web-homepage"}
 
     response = requests.post(DEFAULT_URL, headers=DEFAULT_HEADER, json=data)
     with open(f'{args.landing_path}/{generate_file_name("feed-recommend")}', "w") as f:

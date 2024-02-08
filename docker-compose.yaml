@@ -1,27 +1,27 @@
 version: '3'
 services:
-  dbt_spark:
-    build:
-      context: ./dbt
-      dockerfile: Dockerfile
-    volumes:
-      - ./data:/data
-
-  binance-scrapper:
-    build:
-      context: extractors/binance
-      dockerfile: Dockerfile
-    volumes:
-      - ./data:/data
-
-  elementary:
-    build:
-      context: dbt/elementary
-      dockerfile: Dockerfile
-    command: report
-    volumes:
-      - ./dbt:/usr/app
-      - ./dbt/.dbt/:/root/.dbt/
+  #  dbt_spark:
+  #    build:
+  #      context: ./dbt
+  #      dockerfile: Dockerfile
+  #    volumes:
+  #      - ./data:/data
+  #
+  #  binance-scrapper:
+  #    build:
+  #      context: extractors/binance
+  #      dockerfile: Dockerfile
+  #    volumes:
+  #      - ./data:/data
+  #
+  #  elementary:
+  #    build:
+  #      context: dbt/elementary
+  #      dockerfile: Dockerfile
+  #    command: report
+  #    volumes:
+  #      - ./dbt:/usr/app
+  #      - ./dbt/.dbt/:/root/.dbt/
   
   spark3-thrift:
     build: thrift/
@@ -29,7 +29,7 @@ services:
       - "10000:10000"
       - "4040:4040"
     depends_on:
-      - hive-metastore
+      - hive-server
     command: >
       --class org.apache.spark.sql.hive.thriftserver.HiveThriftServer2
       --name Thrift JDBC/ODBC Server
@@ -38,16 +38,27 @@ services:
       - ./thrift/hive-site.xml:/usr/spark/conf/hive-site.xml
       - ./thrift/spark-defaults.conf:/usr/spark/conf/spark-defaults.conf
     environment:
-      - WAIT_FOR=hive-metastore:5432
-        
-        
+      - WAIT_FOR=hive-server:5432
+  
   hive-metastore:
+    image: bde2020/hive:2.3.2-postgresql-metastore
+    env_file:
+      - ./thrift/hadoop-hive.env
+    command: schematool -dbType postgres -initSchema
+    environment:
+      SERVICE_PRECONDITION: "hive-server:5432"
+    depends_on:
+      - hive-server
+    ports:
+      - "9083:9083"
+  
+  hive-server:
     image: postgres:9-alpine
     ports:
       - "5432:5432"
     volumes:
-      - ./.hive-metastore/:/var/lib/postgresql/data
+      - ./.hive-server/:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=usuario
-      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=hive
+      - POSTGRES_PASSWORD=hive
       - POSTGRES_DB=metastore

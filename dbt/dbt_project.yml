@@ -4,15 +4,13 @@ profile: local
 require-dbt-version: ">=1.7.0"
 
 model-paths: [ "models" ]
+
 models:
-  # Carpeta para modelos marts
-  marts:
-    +materialized: table
-
-  # Carpeta para modelos raw
-  raw:
-    +materialized: view
-
-  # Carpeta para modelos hub
-  hub:
-    +materialized: table
+  +file_format: hudi
+  zgalea_lake:
+    marts:
+      +materialized: table
+    raw:
+      +materialized: view
+    hub:
+      +materialized: table

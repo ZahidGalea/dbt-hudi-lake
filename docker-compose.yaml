@@ -1,18 +1,22 @@
 version: '3'
 services:
-  #  dbt_spark:
-  #    build:
-  #      context: ./dbt
-  #      dockerfile: Dockerfile
-  #    volumes:
-  #      - ./data:/data
-  #
-  #  binance-scrapper:
-  #    build:
-  #      context: extractors/binance
-  #      dockerfile: Dockerfile
-  #    volumes:
-  #      - ./data:/data
+  dbt_spark:
+    container_name: "dbt_spark"
+    build:
+      context: ./dbt
+      dockerfile: Dockerfile
+    working_dir: /dbt
+    volumes:
+      - ./data:/data
+      - ./dbt:/dbt
+    command: [ "dbt", "run", "--profiles-dir","./.dbt" ]
+
+  binance-scrapper:
+    build:
+      context: extractors/binance
+      dockerfile: Dockerfile
+    volumes:
+      - ./data:/data
   #
   #  elementary:
   #    build:

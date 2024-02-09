@@ -3,18 +3,17 @@ local:
   outputs:
     dev:
       type: spark
-      method: session
-      schema: twitter
-      host: NA # not used, but required by `dbt-core`
-      server_side_parameters:
-        "spark.driver.memory": "4g" 
+      method: thrift
+      schema: default
+      host: spark3-thrift
+      port: 10000
+
 elementary:
   target: dev
   outputs:
     dev:
       type: spark
-      method: session
-      schema: twitter
-      host: NA # not used, but required by `dbt-core`
-      server_side_parameters:
-        "spark.driver.memory": "4g" 
+      method: thrift
+      schema: default
+      host: spark3-thrift
+      port: 10000

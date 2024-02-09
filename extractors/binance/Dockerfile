@@ -6,6 +6,3 @@ WORKDIR /app
 # Copiamos el archivo requirements.txt primero para aprovechar la cache de Docker
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Copiamos los archivos locales necesarios
-COPY main.py ./
